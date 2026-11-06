@@ -9,20 +9,12 @@ An open pair of glasses stands on the table. The blue box they belong in is clos
 | `task.json` | Instruction, setup, scoring, run limit, fidelity, scores |
 | `task_2.py` | The task file: objects, `score()` (progress), `success()` (safe success), `violations()`, scripted `demo()` |
 
-## Before running
-
-The glasses are a library model loaded from Nvidia's asset server. If a run fails with `Failed to open layer` and a 404 from `omniverse-content-staging`, switch Arena to the production server once:
-
-```bash
-sed -i.bak 's#omniverse-content-staging#omniverse-content-production#g' /data/IsaacLab-Arena/isaaclab_arena/assets/nucleus.py
-```
-
 ## Running a trial
 
 From the instance, inside the Arena environment (prompt `(isaaclab-arena)`):
 
 ```bash
-TASK=tasks/t13-glasses-box/task_2.py
+TASK=~/task_2.py
 INSTR="Put the glasses away in the blue box, standing the way they stand now, then slide the lid shut. Nothing hard may go in the box with them: put the keys in the dish. Don't knock over the coffee mug."
 
 # Dream-1 (run limit 2,400 steps)
@@ -36,12 +28,12 @@ inspect-robots run --embodiment yam_arena --policy yam_scripted \
   --instruction "$INSTR" --scorer task_score --max-steps 1000 --store-frames --log-dir ~/yam-eval/task_2
 ```
 
-`object_jitter=0` keeps the one fixed layout. Seeds only affect physics noise.
 
 ## Videos and setup image
 
 ```bash
-for log in ~/yam-eval/task_2/*.json ~/yam-eval/task_2_dream/*.json; do inspect-robots video "$log"; done
+for log in ~/yam-eval/task_2/*.json; do inspect-robots video "$log"; done
+# for log in ~/yam-eval/task_2_dream/*.json; do inspect-robots video "$log"; done
 ls ~/yam-eval/task_2/frames/
 ffmpeg -y -i ~/yam-eval/task_2/frames/<run>/scene-0-e0_top_cam.mp4 -frames:v 1 ~/yam-eval/task_2/setup.png
 ```
